@@ -16,7 +16,7 @@ public class DataItem {
     private String city;
     private String region;
     private String sector;
-    private String jobTitle; // TODO rename
+    private String job; // TODO rename
     private String contractType;
     private String educationLevel;
     private String diploma;
@@ -144,12 +144,12 @@ public class DataItem {
         this.sector = sector;
     }
 
-    public String getJobTitle() {
-        return jobTitle;
+    public String getJob() {
+        return job;
     }
 
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
+    public void setJob(String job) {
+        this.job = job;
     }
 
     public String getContractType() {
