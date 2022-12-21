@@ -115,6 +115,8 @@ public abstract class BaseScraper {
         item.setSocialAdvantages(this.fetchPostSocialAdvantages(doc));
         item.setRemote(this.fetchPostRemote(doc));
 
+        ScraperUtils.dd("Total Size: " + item.getFormatedSize());
+
         return item;
     };
 

@@ -40,6 +40,62 @@ public class DataItem {
         this.recommendedSkills = new ArrayList<>();
     }
 
+    public int getMemorySize() {
+        int size = 0;
+        size = 20 + this.url.length() * 2 + size;
+        size = 20 + this.siteName.length() * 2 + size;
+        size = 20 + this.publishDate.length() * 2 + size;
+        size = 20 + this.applyDate.length() * 2 + size;
+        size = 20 + this.companyName.length() * 2 + size;
+        size = 20 + this.companyAddress.length() * 2 + size;
+        size = 20 + this.companyWebsite.length() * 2 + size;
+        size = 20 + this.companyDescription.length() * 2 + size;
+        size = 20 + this.description.length() * 2 + size;
+        size = 20 + this.city.length() * 2 + size;
+        size = 20 + this.region.length() * 2 + size;
+        size = 20 + this.sector.length() * 2 + size;
+        size = 20 + this.job.length() * 2 + size;
+        size = 20 + this.contractType.length() * 2 + size;
+        size = 20 + this.educationLevel.length() * 2 + size;
+        size = 20 + this.diploma.length() * 2 + size;
+        size = 20 + this.experience.length() * 2 + size;
+        size = 20 + this.profileSearched.length() * 2 + size;
+        size = 20 + this.language.length() * 2 + size;
+        size = 20 + this.languageLevel.length() * 2 + size;
+        size = 20 + this.salary.length() * 2 + size;
+        size = 20 + this.socialAdvantages.length() * 2 + size;
+        size = 20 + this.remote.length() * 2 + size;
+
+        for(String str: this.hardSkills){
+            size = 20 + str.length() * 2 + size;
+        }
+        for(String str: this.softSkills){
+            size = 20 + str.length() * 2 + size;
+        }
+        for(String str: this.recommendedSkills){
+            size = 20 + str.length() * 2 + size;
+        }
+        return size;
+    }
+
+    public String getFormatedSize() {
+        String ext = "bytes";
+        float size = this.getMemorySize();
+        if(size >= 1024) {
+            ext = "KB";
+            size = size / 1024;
+        }
+        if(size >= 1024) {
+            ext = "MB";
+            size = size / 1024;
+        }
+        if(size >= 1024) {
+            ext = "GB";
+            size = size / 1024;
+        }
+        return size + " " + ext;
+    }
+
     public String getUrl() {
         return url;
     }

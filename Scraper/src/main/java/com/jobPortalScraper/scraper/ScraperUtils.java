@@ -1,5 +1,7 @@
 package com.jobPortalScraper.scraper;
 
+import java.lang.instrument.Instrumentation;
+
 public class ScraperUtils {
     public static boolean debug = false;
 
