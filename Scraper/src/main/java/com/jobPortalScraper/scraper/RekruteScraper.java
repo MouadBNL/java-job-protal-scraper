@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RekruteScraper extends BaseScraper{
@@ -221,6 +222,137 @@ public class RekruteScraper extends BaseScraper{
             return content;
         } catch (Exception e) {
             ScraperUtils.dd("Error fetching post contract.");
+//            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    protected String fetchPostEducationLevel(Document doc){
+        try {
+            String selector = "li[title=\"Niveau d'étude et formation\"]";
+            String content = doc.selectFirst(selector).text().split(" - ")[0].trim();
+            ScraperUtils.dd("Post education level: " + content);
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post education level.");
+//            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    protected String fetchPostDiploma(Document doc){
+        try {
+            String selector = "li[title=\"Niveau d'étude et formation\"]";
+            String content = doc.selectFirst(selector).text().split(" - ")[1].trim();
+            ScraperUtils.dd("Post diploma: " + content);
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post diploma.");
+//            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    protected String fetchPostExperience(Document doc){
+        try {
+            String selector = "li[title=\"Expérience requise\"]";
+            String content = doc.selectFirst(selector).text().split(" - ")[1].trim();
+            ScraperUtils.dd("Post experience: " + content);
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post experience.");
+//            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    protected String fetchPostProfileSearched(Document doc){
+        try {
+            String selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(5)";
+            if(! (
+                    doc.selectFirst(selector) != null &&
+                            doc.selectFirst(selector).selectFirst("h2") != null &&
+//                    doc.selectFirst(selector).selectFirst("h2").text() != null &&
+                            doc.selectFirst(selector).selectFirst("h2").text().equals("Profil recherché :")
+            )) {
+                selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(6)";
+            }
+
+            String content = doc.selectFirst(selector).text().substring(17).trim();
+            ScraperUtils.dd("Post searched profile: " + content.substring(0, 40) + "...");
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post searched profile.");
+//            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    protected String fetchPostPersonalityTraits(Document doc){
+        try {
+            String selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(6)";
+            if(! (
+                    doc.selectFirst(selector) != null &&
+                            doc.selectFirst(selector).selectFirst("h2") != null &&
+//                    doc.selectFirst(selector).selectFirst("h2").text() != null &&
+                            doc.selectFirst(selector).selectFirst("h2").text().equals("Traits de personnalité souhaités :")
+            )) {
+                selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(7)";
+            }
+            Element persoTraits = doc.selectFirst(selector);
+            String content = "";
+            for(Element el: persoTraits.select(".tagSkills")){
+                content = content + el.text().trim() + ", ";
+            }
+            ScraperUtils.dd("Post personality traits: " + content.substring(0, 40) + "...");
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post personality traits.");
+//            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    protected ArrayList<String> fetchPostSoftSkills(Document doc){
+        try {
+            String selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(6)";
+            if(! (
+                    doc.selectFirst(selector) != null &&
+                            doc.selectFirst(selector).selectFirst("h2") != null &&
+//                    doc.selectFirst(selector).selectFirst("h2").text() != null &&
+                            doc.selectFirst(selector).selectFirst("h2").text().equals("Traits de personnalité souhaités :")
+            )) {
+                selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(7)";
+            }
+            Element persoTraits = doc.selectFirst(selector);
+            ArrayList<String> content = new ArrayList<>();
+            for(Element el: persoTraits.select(".tagSkills")){
+                content.add(el.text().trim());
+            }
+            ScraperUtils.dd("Post SoftSkills: " + content.toString().substring(0, 40) + "...");
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post SoftSkills.");
+//            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    protected String fetchPostRemote(Document doc){
+        try {
+            String selector = "span[title=\"Télétravail\"]";
+            String content = doc.selectFirst(selector).text().replace("Télétravail :", "").trim();
+            ScraperUtils.dd("Post remote: " + content);
+            return content;
+        } catch (Exception e) {
+            ScraperUtils.dd("Error fetching post remote.");
 //            e.printStackTrace();
             return "";
         }
