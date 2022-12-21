@@ -13,5 +13,6 @@ public class Main {
         sc.fetchPagesUrls();
         sc.fetchAllPostsUrl();
         sc.fetchAllPostsAttributes();
+        sc.storeAllPosts();
     }
 }

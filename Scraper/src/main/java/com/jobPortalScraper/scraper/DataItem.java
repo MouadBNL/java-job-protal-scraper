@@ -1,5 +1,7 @@
 package com.jobPortalScraper.scraper;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 public class DataItem {
@@ -326,5 +328,41 @@ public class DataItem {
                 "siteName='" + siteName + '\'' +
                 ", title='" + title + '\'' +
                 '}';
+    }
+
+    public PreparedStatement getInsertStatement(Connection conn) throws java.sql.SQLException {
+        String query = "INSERT INTO jobs(" +
+                "site_name, url, publish_date, apply_date, company_name, " +
+                "company_address, company_website, company_description, " +
+                "description, title, diploma, experience, profile_searched," +
+                "personality_traits, hard_skills, soft_skills, recommended_skills," +
+                "lang, lang_level, salary, social_advantages, remote" +
+                ") VALUES(" +
+                "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? " +
+                ");";
+        PreparedStatement st = conn.prepareStatement(query);
+        st.setString(1, this.siteName.replace("'", " "));
+        st.setString(2, this.url.replace("'", " "));
+        st.setString(3, this.publishDate.replace("'", " "));
+        st.setString(4, this.applyDate.replace("'", " "));
+        st.setString(5, this.companyName.replace("'", " "));
+        st.setString(6, this.companyAddress.replace("'", " "));
+        st.setString(7, this.companyWebsite.replace("'", " "));
+        st.setString(8, this.companyDescription.replace("'", " "));
+        st.setString(9, this.description.replace("'", " "));
+        st.setString(10, this.title.replace("'", " "));
+        st.setString(11, this.diploma.replace("'", " "));
+        st.setString(12, this.experience.replace("'", " "));
+        st.setString(13, this.profileSearched.replace("'", " "));
+        st.setString(14, this.personalityTraits.replace("'", " "));
+        st.setString(15, String.join(", ", this.hardSkills).replace("'", " "));
+        st.setString(16, String.join(", ", this.softSkills).replace("'", " "));
+        st.setString(17, String.join(", ", this.recommendedSkills));
+        st.setString(18, this.language.replace("'", " "));
+        st.setString(19, this.languageLevel.replace("'", " "));
+        st.setString(20, this.salary.replace("'", " "));
+        st.setString(21, this.socialAdvantages.replace("'", " "));
+        st.setString(22, this.remote.replace("'", " "));
+        return st;
     }
 }

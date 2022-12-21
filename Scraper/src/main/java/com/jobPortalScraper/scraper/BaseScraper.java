@@ -3,10 +3,15 @@ package com.jobPortalScraper.scraper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public abstract class BaseScraper {
 
+    protected DBManager dbManager;
     protected String siteName;
     protected String baseUrl;
     protected String pagesUrlFormat;
@@ -14,7 +19,7 @@ public abstract class BaseScraper {
     protected ArrayList<String> pagesUrl;
     protected  ArrayList<String> postsUrl;
     protected ArrayList<DataItem> posts;
-    protected int maxPageToScrape = 2;
+    protected int maxPageToScrape = 1;
     protected int maxPostsToScrape = 20;
 
     public BaseScraper(String siteName, String baseUrl, String pagesUrlFormat) {
@@ -25,6 +30,7 @@ public abstract class BaseScraper {
         this.postsUrl = new ArrayList<>();
         this.posts = new ArrayList<>();
         ScraperUtils.dd("Created new Scraper {baseUrl:  "+baseUrl+"}");
+        this.dbManager = DBManager.getInstance();
     }
 
     public static String version() {
@@ -69,9 +75,12 @@ public abstract class BaseScraper {
     }
 
     public void fetchAllPostsAttributes() {
+        int max = this.maxPostsToScrape;
         for(String postUrl: this.postsUrl) {
             ScraperUtils.dd("Loading data from post: " + postUrl);
             this.posts.add(fetchAttributesFromPost(postUrl));
+            max--;
+            if(max <= 0) break;
         }
     }
 
@@ -225,5 +234,30 @@ public abstract class BaseScraper {
 
     public ArrayList<DataItem> getPosts() {
         return posts;
+    }
+
+
+    public void storeAllPosts() {
+        ScraperUtils.dd("Connecting to database...");
+        try {
+            Connection conn = this.dbManager.makeConnection();
+            int counter = 0;
+            for (DataItem itm: this.posts) {
+                counter++;
+                try {
+                    PreparedStatement st = itm.getInsertStatement(conn);
+    //                ScraperUtils.dd("Starting insertion");
+    //                ScraperUtils.dd(st.toString());
+                    st.execute();
+                    ScraperUtils.dd("Insertion success, num: "+counter+".");
+                } catch (Exception e) {
+                    ScraperUtils.dd("Insertion Error, num: "+counter+". " + e.getMessage());
+                }
+            }
+            conn.close();
+        } catch (Exception e) {
+            ScraperUtils.dd("Connection failed.");
+            e.printStackTrace();
+        }
     }
 }
