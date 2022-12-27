@@ -135,7 +135,7 @@ public class RekruteScraper extends BaseScraper{
     protected String fetchPostCompanyDescription(Document doc){
         try {
             String selector = "#recruiterDescription";
-            String content = doc.selectFirst(selector).text().substring(11).trim();
+            String content = doc.selectFirst(selector).text().substring(12).trim();
             ScraperUtils.dd("Company description: " + content.substring(0, 40) + "...");
             return content;
         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class RekruteScraper extends BaseScraper{
                 selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(5)";
             }
 
-            String content = doc.selectFirst(selector).text().substring(6).trim();
+            String content = doc.selectFirst(selector).text().substring(7).trim();
             ScraperUtils.dd("Post description: " + content.substring(0, 40) + "...");
             return content;
         } catch (Exception e) {
@@ -284,7 +284,7 @@ public class RekruteScraper extends BaseScraper{
                 selector = "#fortopscroll > div.container.anno > div:nth-child(2) > div > div:nth-child(6)";
             }
 
-            String content = doc.selectFirst(selector).text().substring(17).trim();
+            String content = doc.selectFirst(selector).text().substring(18).trim();
             ScraperUtils.dd("Post searched profile: " + content.substring(0, 40) + "...");
             return content;
         } catch (Exception e) {

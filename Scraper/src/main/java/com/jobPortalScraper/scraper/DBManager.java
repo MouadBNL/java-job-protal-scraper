@@ -37,6 +37,7 @@ public class DBManager {
         this.configFilePath = ".dbconf";
         this.loadDatabaseConfig();
         this.connectionUrl = "jdbc:mysql://"+this.dbHost+":"+this.dbPort+"/" + this.dbName;
+        // jdbc:mysql://localhost:3306/basedd
         try {
             this.makeConnection();
             ScraperUtils.dd("Connected successfully");

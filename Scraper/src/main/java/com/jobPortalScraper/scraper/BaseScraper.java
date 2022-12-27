@@ -19,8 +19,9 @@ public abstract class BaseScraper {
     protected ArrayList<String> pagesUrl;
     protected  ArrayList<String> postsUrl;
     protected ArrayList<DataItem> posts;
-    protected int maxPageToScrape = 1;
-    protected int maxPostsToScrape = 20;
+    protected int maxPageToScrape = 100;
+    protected int maxPostsToScrape = 1000;
+    protected ArrayList<ScraperListeners> listeners;
 
     public BaseScraper(String siteName, String baseUrl, String pagesUrlFormat) {
         this.siteName = siteName;
@@ -29,8 +30,13 @@ public abstract class BaseScraper {
         this.pagesUrl = new ArrayList<>();
         this.postsUrl = new ArrayList<>();
         this.posts = new ArrayList<>();
+        this.listeners = new ArrayList<>();
         ScraperUtils.dd("Created new Scraper {baseUrl:  "+baseUrl+"}");
         this.dbManager = DBManager.getInstance();
+    }
+
+    public void registerListener(ScraperListeners listener) {
+        this.listeners.add(listener);
     }
 
     public static String version() {
@@ -45,6 +51,9 @@ public abstract class BaseScraper {
     public void fetchPageNumber() {
         int nbr = this.loadPagesNumber();
         this.pagesNumber = nbr;
+        for(ScraperListeners l: this.listeners){
+            l.updateTotalPages(nbr);
+        }
         ScraperUtils.dd("Number of pages found: " + nbr);
     }
 
@@ -58,6 +67,9 @@ public abstract class BaseScraper {
             if(i == 5) {
                 ScraperUtils.dd("...");
             }
+        }
+        for(ScraperListeners l: this.listeners){
+            l.updateCurrentPostNumber(this.pagesUrl.size());
         }
     }
 
@@ -78,6 +90,9 @@ public abstract class BaseScraper {
         int max = this.maxPostsToScrape;
         for(String postUrl: this.postsUrl) {
             ScraperUtils.dd("Loading data from post: " + postUrl);
+            for(ScraperListeners l: this.listeners){
+                l.updateCurrentPostUrl(postUrl);
+            }
             this.posts.add(fetchAttributesFromPost(postUrl));
             max--;
             if(max <= 0) break;
@@ -87,7 +102,7 @@ public abstract class BaseScraper {
     protected abstract int loadPagesNumber();
 
     protected abstract void fetchAllPostsFromPage(String pageUrl);
-    protected DataItem fetchAttributesFromPost(String postUrl) {
+    public DataItem fetchAttributesFromPost(String postUrl) {
         DataItem item = new DataItem(this.siteName, postUrl);
         Document doc;
         try {

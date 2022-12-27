@@ -334,11 +334,11 @@ public class DataItem {
         String query = "INSERT INTO jobs(" +
                 "site_name, url, publish_date, apply_date, company_name, " +
                 "company_address, company_website, company_description, " +
-                "description, title, diploma, experience, profile_searched," +
+                "description, title, city, region, sector, job, contract_type, education_level, diploma, experience, profile_searched," +
                 "personality_traits, hard_skills, soft_skills, recommended_skills," +
                 "lang, lang_level, salary, social_advantages, remote" +
                 ") VALUES(" +
-                "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? " +
+                "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? " +
                 ");";
         PreparedStatement st = conn.prepareStatement(query);
         st.setString(1, this.siteName.replace("'", " "));
@@ -351,18 +351,24 @@ public class DataItem {
         st.setString(8, this.companyDescription.replace("'", " "));
         st.setString(9, this.description.replace("'", " "));
         st.setString(10, this.title.replace("'", " "));
-        st.setString(11, this.diploma.replace("'", " "));
-        st.setString(12, this.experience.replace("'", " "));
-        st.setString(13, this.profileSearched.replace("'", " "));
-        st.setString(14, this.personalityTraits.replace("'", " "));
-        st.setString(15, String.join(", ", this.hardSkills).replace("'", " "));
-        st.setString(16, String.join(", ", this.softSkills).replace("'", " "));
-        st.setString(17, String.join(", ", this.recommendedSkills));
-        st.setString(18, this.language.replace("'", " "));
-        st.setString(19, this.languageLevel.replace("'", " "));
-        st.setString(20, this.salary.replace("'", " "));
-        st.setString(21, this.socialAdvantages.replace("'", " "));
-        st.setString(22, this.remote.replace("'", " "));
+        st.setString(11, this.city.replace("'", " "));
+        st.setString(12, this.region.replace("'", " "));
+        st.setString(13, this.sector.replace("'", " "));
+        st.setString(14, this.job.replace("'", " "));
+        st.setString(15, this.contractType.replace("'", " "));
+        st.setString(16, this.educationLevel.replace("'", " "));
+        st.setString(17, this.diploma.replace("'", " "));
+        st.setString(18, this.experience.replace("'", " "));
+        st.setString(19, this.profileSearched.replace("'", " "));
+        st.setString(20, this.personalityTraits.replace("'", " "));
+        st.setString(21, String.join(", ", this.hardSkills).replace("'", " "));
+        st.setString(22, String.join(", ", this.softSkills).replace("'", " "));
+        st.setString(23, String.join(", ", this.recommendedSkills));
+        st.setString(24, this.language.replace("'", " "));
+        st.setString(25, this.languageLevel.replace("'", " "));
+        st.setString(26, this.salary.replace("'", " "));
+        st.setString(27, this.socialAdvantages.replace("'", " "));
+        st.setString(28, this.remote.replace("'", " "));
         return st;
     }
 }
