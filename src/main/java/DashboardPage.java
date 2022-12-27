@@ -1,7 +1,4 @@
-import com.jobPortalScraper.scraper.DBManager;
-import com.jobPortalScraper.scraper.DataItem;
-import com.jobPortalScraper.scraper.RekruteScraper;
-import com.jobPortalScraper.scraper.ScraperUtils;
+import com.jobPortalScraper.scraper.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,7 +13,8 @@ import java.util.ArrayList;
 public class DashboardPage extends JFrame {
     private final int WIDTH = 1280, HEIGHT = 720;
     protected DBManager dbManager;
-    private RekruteScraper rekruteScraper;
+//    private RekruteScraper rekruteScraper;
+    private EmploiScraper rekruteScraper;
     private JLabel lblScraping;
     private JProgressBar progressBar_2;
     private JButton btnSaveToMysql;
@@ -76,7 +74,8 @@ public class DashboardPage extends JFrame {
      */
     public DashboardPage() {
         this.dbManager = DBManager.getInstance();
-        this.rekruteScraper = new RekruteScraper();
+//        this.rekruteScraper = new RekruteScraper();
+        this.rekruteScraper = new EmploiScraper();
         items = new ArrayList<>();
         this.setTitle("Job Insight");
         this.setBounds(100, 100, 1280, 720);
@@ -318,6 +317,12 @@ public class DashboardPage extends JFrame {
                     int total = items.size();
                     for (DataItem itm: items) {
                         counter++;
+                        if(itm.getSiteName().equals("Rekrute")){
+                            itm = RekruteScraper.normalizeDataItem(itm);
+                        } else if (itm.getSiteName().equals("Emploi")) {
+                            itm = EmploiScraper.normalizeDataItem(itm);
+                        }
+                        System.out.println("Secteur: " + itm.getSector());
                         try {
                             PreparedStatement st = itm.getInsertStatement(conn);
                             //                ScraperUtils.dd("Starting insertion");

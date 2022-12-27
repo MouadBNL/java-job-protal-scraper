@@ -19,7 +19,7 @@ public abstract class BaseScraper {
     protected ArrayList<String> pagesUrl;
     protected  ArrayList<String> postsUrl;
     protected ArrayList<DataItem> posts;
-    protected int maxPageToScrape = 2;
+    protected int maxPageToScrape = 4;
     protected int maxPostsToScrape = 1000;
     protected ArrayList<ScraperListeners> listeners;
 
@@ -112,32 +112,32 @@ public abstract class BaseScraper {
             ScraperUtils.dd("Error loading page. Skipping...");
             return null;
         }
-        item.setTitle(this.fetchPostTitle(doc));
-        item.setPublishDate(this.fetchPostPublishDate(doc));
-        item.setApplyDate(this.fetchPostApplyDate(doc));
-        item.setCompanyName(this.fetchPostCompanyName(doc));
-        item.setCompanyAddress(this.fetchPostCompanyAddress(doc));
-        item.setCompanyWebsite(this.fetchPostCompanyWebsite(doc));
-        item.setCompanyDescription(this.fetchPostCompanyDescription(doc));
-        item.setDescription(this.fetchPostDescription(doc));
-        item.setCity(this.fetchPostCity(doc));
-        item.setRegion(this.fetchPostRegion(doc));
-        item.setSector(this.fetchPostSector(doc));
-        item.setJob(this.fetchPostJob(doc));
-        item.setContractType(this.fetchPostContractType(doc));
-        item.setEducationLevel(this.fetchPostEducationLevel(doc));
-        item.setDiploma(this.fetchPostDiploma(doc));
-        item.setExperience(this.fetchPostExperience(doc));
-        item.setProfileSearched(this.fetchPostProfileSearched(doc));
-        item.setPersonalityTraits(this.fetchPostPersonalityTraits(doc));
+        item.setTitle(this.fetchPostTitle(doc).toLowerCase());
+        item.setPublishDate(this.fetchPostPublishDate(doc).toLowerCase());
+        item.setApplyDate(this.fetchPostApplyDate(doc).toLowerCase());
+        item.setCompanyName(this.fetchPostCompanyName(doc).toLowerCase());
+        item.setCompanyAddress(this.fetchPostCompanyAddress(doc).toLowerCase());
+        item.setCompanyWebsite(this.fetchPostCompanyWebsite(doc).toLowerCase());
+        item.setCompanyDescription(this.fetchPostCompanyDescription(doc).toLowerCase());
+        item.setDescription(this.fetchPostDescription(doc).toLowerCase());
+        item.setCity(this.fetchPostCity(doc).toLowerCase());
+        item.setRegion(this.fetchPostRegion(doc).toLowerCase());
+        item.setSector(this.fetchPostSector(doc).toLowerCase());
+        item.setJob(this.fetchPostJob(doc).toLowerCase());
+        item.setContractType(this.fetchPostContractType(doc).toLowerCase());
+        item.setEducationLevel(this.fetchPostEducationLevel(doc).toLowerCase());
+        item.setDiploma(this.fetchPostDiploma(doc).toLowerCase());
+        item.setExperience(this.fetchPostExperience(doc).toLowerCase());
+        item.setProfileSearched(this.fetchPostProfileSearched(doc).toLowerCase());
+        item.setPersonalityTraits(this.fetchPostPersonalityTraits(doc).toLowerCase());
         item.setHardSkills(this.fetchPostHardSkills(doc));
         item.setSoftSkills(this.fetchPostSoftSkills(doc));
         item.setRecommendedSkills(this.fetchPostRecommendedSkills(doc));
-        item.setLanguage(this.fetchPostLanguage(doc));
-        item.setLanguageLevel(this.fetchPostLanguageLevel(doc));
-        item.setSalary(this.fetchPostSalary(doc));
-        item.setSocialAdvantages(this.fetchPostSocialAdvantages(doc));
-        item.setRemote(this.fetchPostRemote(doc));
+        item.setLanguage(this.fetchPostLanguage(doc).toLowerCase());
+        item.setLanguageLevel(this.fetchPostLanguageLevel(doc).toLowerCase());
+        item.setSalary(this.fetchPostSalary(doc).toLowerCase());
+        item.setSocialAdvantages(this.fetchPostSocialAdvantages(doc).toLowerCase());
+        item.setRemote(this.fetchPostRemote(doc).toLowerCase());
 
         ScraperUtils.dd("Total Size: " + item.getFormatedSize());
 
@@ -274,5 +274,10 @@ public abstract class BaseScraper {
             ScraperUtils.dd("Connection failed.");
             e.printStackTrace();
         }
+    }
+
+
+    public static DataItem normalizeDataItem(DataItem item) {
+        return item;
     }
 }

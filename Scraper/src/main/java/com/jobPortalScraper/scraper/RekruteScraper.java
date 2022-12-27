@@ -1,6 +1,8 @@
 package com.jobPortalScraper.scraper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -358,6 +360,23 @@ public class RekruteScraper extends BaseScraper{
 //            e.printStackTrace();
             return "";
         }
+    }
+
+    public static DataItem normalizeDataItem(DataItem item) {
+        /**
+         * Formating the sector
+         */
+        String sector = item.getSector();
+        String[] secs = StringUtils.split(sector, "-/");
+        for(String s: secs) {
+            if(s.contains("Secteur")) {
+                sector = s.replace("Secteur", "").trim();
+                break;
+            }
+        }
+        item.setSector(sector);
+
+        return item;
     }
 
 

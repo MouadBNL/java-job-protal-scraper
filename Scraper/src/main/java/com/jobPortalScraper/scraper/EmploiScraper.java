@@ -1,12 +1,15 @@
 package com.jobPortalScraper.scraper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class EmploiScraper extends BaseScraper {
 
@@ -368,6 +371,34 @@ public class EmploiScraper extends BaseScraper {
         return "Non";
     }
 
+    public static DataItem normalizeDataItem(DataItem item) {
+        /**
+         * Formating the sector
+         */
+        String sector = item.getSector();
+        try {
+            File f = new File("emploi_sectors.txt");
+            Scanner r = new Scanner(f);
+            while (r.hasNextLine()) {
+                String l = r.nextLine();
+                String[] sec_var = l.split(" => ");
+
+                if(
+                        sector.trim().toLowerCase().contains(sec_var[1].trim().toLowerCase()) ||
+                        sec_var[1].trim().toLowerCase().contains(sector.trim().toLowerCase())
+                ) {
+                    sector = sec_var[0].trim().toLowerCase();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        ScraperUtils.dd("New Sector: " + sector);
+        item.setSector(sector);
+
+        return item;
+    }
 
 
 }

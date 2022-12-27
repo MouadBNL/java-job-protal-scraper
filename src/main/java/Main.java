@@ -11,19 +11,27 @@ import java.util.Enumeration;
 
 public class Main {
     public static void main(String[] args) {
+        String a ="Informatique, SSII, Internet Ingénierie, études développement";
+        String b = "Informatique";
+        if(a.trim().toLowerCase().contains(b.trim().toLowerCase())){
+            System.out.println("THAT S WORKING !!!");
+        } else {
+
+            System.out.println("THAT S NOT WORKING !!!");
+        }
         System.out.println("Loading app...");
         System.out.println(BaseScraper.version());
         ScraperUtils.setDebug();
         setUIFont(new FontUIResource(new Font("Arial", 0, 12)));
-//        SplashScreenPage sc = new SplashScreenPage();
+        SplashScreenPage sc = new SplashScreenPage();
 
-        EmploiScraper sc = new EmploiScraper();
+//        EmploiScraper sc = new EmploiScraper();
 
 //        Main.printUsage();
-        sc.fetchPageNumber();
-        sc.fetchPagesUrls();
-        sc.fetchAllPostsUrl();
-        sc.fetchAllPostsAttributes();
+//        sc.fetchPageNumber();
+//        sc.fetchPagesUrls();
+//        sc.fetchAllPostsUrl();
+//        sc.fetchAllPostsAttributes();
 //        sc.storeAllPosts();
     }
     public static void setUIFont(FontUIResource f) {
