@@ -1,4 +1,5 @@
 import com.jobPortalScraper.scraper.BaseScraper;
+import com.jobPortalScraper.scraper.EmploiScraper;
 import com.jobPortalScraper.scraper.ScraperUtils;
 import com.sun.management.OperatingSystemMXBean;
 
@@ -14,13 +15,15 @@ public class Main {
         System.out.println(BaseScraper.version());
         ScraperUtils.setDebug();
         setUIFont(new FontUIResource(new Font("Arial", 0, 12)));
-        SplashScreenPage sc = new SplashScreenPage();
+//        SplashScreenPage sc = new SplashScreenPage();
+
+        EmploiScraper sc = new EmploiScraper();
 
 //        Main.printUsage();
-//        sc.fetchPageNumber();
-//        sc.fetchPagesUrls();
-//        sc.fetchAllPostsUrl();
-//        sc.fetchAllPostsAttributes();
+        sc.fetchPageNumber();
+        sc.fetchPagesUrls();
+        sc.fetchAllPostsUrl();
+        sc.fetchAllPostsAttributes();
 //        sc.storeAllPosts();
     }
     public static void setUIFont(FontUIResource f) {

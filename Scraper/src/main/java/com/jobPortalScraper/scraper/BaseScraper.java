@@ -19,7 +19,7 @@ public abstract class BaseScraper {
     protected ArrayList<String> pagesUrl;
     protected  ArrayList<String> postsUrl;
     protected ArrayList<DataItem> posts;
-    protected int maxPageToScrape = 100;
+    protected int maxPageToScrape = 2;
     protected int maxPostsToScrape = 1000;
     protected ArrayList<ScraperListeners> listeners;
 
