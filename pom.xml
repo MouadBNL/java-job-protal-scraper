@@ -9,6 +9,7 @@
   <url>http://maven.apache.org</url>
   <modules>
     <module>Scraper</module>
+    <module>ScraperUI</module>
   </modules>
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
@@ -19,6 +20,16 @@
       <groupId>org.job-portal-scraper</groupId>
       <artifactId>Scraper</artifactId>
       <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.job-portal-scraper</groupId>
+      <artifactId>ScraperUI</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>nz.ac.waikato.cms.weka</groupId>
+      <artifactId>weka-stable</artifactId>
+      <version>3.8.6</version>
     </dependency>
   </dependencies>
 </project>

@@ -1,13 +1,11 @@
 package com.jobPortalScraper.scraper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -47,9 +45,6 @@ public class EmploiScraper extends BaseScraper {
             if(i == 5) {
                 ScraperUtils.dd("...");
             }
-        }
-        for(ScraperListeners l: this.listeners){
-            l.updateCurrentPostNumber(this.pagesUrl.size());
         }
     }
 

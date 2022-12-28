@@ -4,9 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public abstract class BaseScraper {
@@ -21,7 +19,7 @@ public abstract class BaseScraper {
     protected ArrayList<DataItem> posts;
     protected int maxPageToScrape = 4;
     protected int maxPostsToScrape = 1000;
-    protected ArrayList<ScraperListeners> listeners;
+    protected ScraperListener listener = null;
 
     public BaseScraper(String siteName, String baseUrl, String pagesUrlFormat) {
         this.siteName = siteName;
@@ -30,13 +28,12 @@ public abstract class BaseScraper {
         this.pagesUrl = new ArrayList<>();
         this.postsUrl = new ArrayList<>();
         this.posts = new ArrayList<>();
-        this.listeners = new ArrayList<>();
         ScraperUtils.dd("Created new Scraper {baseUrl:  "+baseUrl+"}");
         this.dbManager = DBManager.getInstance();
     }
 
-    public void registerListener(ScraperListeners listener) {
-        this.listeners.add(listener);
+    public void setListener(ScraperListener listener){
+        this.listener = listener;
     }
 
     public static String version() {
@@ -51,8 +48,8 @@ public abstract class BaseScraper {
     public void fetchPageNumber() {
         int nbr = this.loadPagesNumber();
         this.pagesNumber = nbr;
-        for(ScraperListeners l: this.listeners){
-            l.updateTotalPages(nbr);
+        if(this.listener != null) {
+            this.listener.updateTotalPages(nbr);
         }
         ScraperUtils.dd("Number of pages found: " + nbr);
     }
@@ -68,14 +65,13 @@ public abstract class BaseScraper {
                 ScraperUtils.dd("...");
             }
         }
-        for(ScraperListeners l: this.listeners){
-            l.updateCurrentPostNumber(this.pagesUrl.size());
-        }
     }
 
     public void fetchAllPostsUrl() {
         int maxPage = this.maxPageToScrape;
+        int nbr = 0;
         for (String pageUrl : this.pagesUrl) {
+            nbr++;
             ScraperUtils.dd("Fetching data from page: " + pageUrl);
             this.fetchAllPostsFromPage(pageUrl);
             maxPage--;
@@ -84,14 +80,19 @@ public abstract class BaseScraper {
                 break;
             }
         }
+        if(this.listener != null) {
+            this.listener.updateTotalPosts(this.postsUrl.size());
+        }
     }
 
     public void fetchAllPostsAttributes() {
         int max = this.maxPostsToScrape;
+        int nbr = 0;
         for(String postUrl: this.postsUrl) {
             ScraperUtils.dd("Loading data from post: " + postUrl);
-            for(ScraperListeners l: this.listeners){
-                l.updateCurrentPostUrl(postUrl);
+            nbr++;
+            if(this.listener != null) {
+                this.listener.updateCurrentPost(nbr, postUrl);
             }
             this.posts.add(fetchAttributesFromPost(postUrl));
             max--;
@@ -257,6 +258,8 @@ public abstract class BaseScraper {
         try {
             Connection conn = this.dbManager.makeConnection();
             int counter = 0;
+            int success = 0;
+            int failed = 0;
             for (DataItem itm: this.posts) {
                 counter++;
                 try {
@@ -265,9 +268,18 @@ public abstract class BaseScraper {
     //                ScraperUtils.dd(st.toString());
                     st.execute();
                     ScraperUtils.dd("Insertion success, num: "+counter+".");
+                    success++;
                 } catch (Exception e) {
+                    failed++;
                     ScraperUtils.dd("Insertion Error, num: "+counter+". " + e.getMessage());
                 }
+                if(this.listener != null){
+                    this.listener.updateCurrentStorage(counter);
+                }
+            }
+
+            if(this.listener != null) {
+                this.listener.finishedMysqlStorage(success, failed);
             }
             conn.close();
         } catch (Exception e) {
