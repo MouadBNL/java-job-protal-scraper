@@ -15,30 +15,6 @@ public class Main {
         System.out.println(BaseScraper.version());
         ScraperUtils.setDebug();
         ScraperUIManager.start();
-//        setUIFont(new FontUIResource(new Font("Arial", 0, 12)));
-//        SplashScreenPage sc = new SplashScreenPage();
-
-//        EmploiScraper sc = new EmploiScraper();
-
-//        Main.printUsage();
-//        sc.fetchPageNumber();
-//        sc.fetchPagesUrls();
-//        sc.fetchAllPostsUrl();
-//        sc.fetchAllPostsAttributes();
-//        sc.storeAllPosts();
-        Model m = new Model();
-        try {
-            m.loadDefaultData();
-//            m.startJ48();
-//            m.startZeroR();
-//            m.startDecisionTable();
-//            m.startZeroR();
-//            m.startZeroR();
-//            m.startZeroR();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
     }
     public static void setUIFont(FontUIResource f) {
