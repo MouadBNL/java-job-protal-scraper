@@ -1,5 +1,6 @@
 package org.JobPortalScraper.ScraperUI;
 
+import com.jobPortalScraper.scraper.EmploiScraper;
 import com.jobPortalScraper.scraper.RekruteScraper;
 import com.jobPortalScraper.scraper.ScraperListener;
 
@@ -18,15 +19,60 @@ public class DashboardPage extends JFrame {
     protected JButton mysql_start;
     protected JButton scraping_mysql;
     protected JTextPane txt_logs;
+    protected JComboBox select_src;
     protected int total = 1;
     protected RekruteScraper rekruteScraper;
+    protected EmploiScraper emploiScraper;
 
     public DashboardPage() {
         initialize();
         this.setVisible(true);
 
         rekruteScraper = new RekruteScraper();
+        emploiScraper = new EmploiScraper();
         rekruteScraper.setListener(new ScraperListener() {
+            @Override
+            public void updateTotalPages(int pages) {
+                lbl_logs.setText("Number of pages found: " + pages);
+                System.out.println("Number of pages found: " + pages);
+                txt_logs.setText(txt_logs.getText() + "Number of pages found: " + pages + "\n");
+            }
+
+            @Override
+            public void updateTotalPosts(int posts) {
+                lbl_logs.setText("Number of posts found: " + posts);
+                System.out.println("Number of posts found: " + posts);
+                txt_logs.setText(txt_logs.getText() + "Number of posts found: " + posts + "\n");
+                total = posts;
+            }
+
+            @Override
+            public void updateCurrentPost(int post, String url) {
+                int progress = (post * 100) / total;
+                lbl_logs.setText("Scraping "+progress+"% : " + url);
+                action_progress.setValue(progress);
+                System.out.println("Scraping "+progress+"% : " + url);
+                txt_logs.setText(txt_logs.getText() + "Scraping "+progress+"% : " + url + "\n");
+
+            }
+
+            @Override
+            public void updateCurrentStorage(int current) {
+                int progress = (current * 100) / total;
+                lbl_logs.setText("Storing "+progress+"%.");
+                action_progress.setValue(progress);
+                System.out.println("Storing "+progress+"%.");
+                txt_logs.setText(txt_logs.getText() + "Storing "+progress+"%." + "\n");
+            }
+
+            @Override
+            public void finishedMysqlStorage(int success, int failed) {
+                JOptionPane.showMessageDialog(null, "Finished storing: "+success+" success, "+failed+" failed.");
+                txt_logs.setText(txt_logs.getText() + "Finished storing: "+success+" success, "+failed+" failed." + "\n");
+            }
+        });
+
+        emploiScraper.setListener(new ScraperListener() {
             @Override
             public void updateTotalPages(int pages) {
                 lbl_logs.setText("Number of pages found: " + pages);
@@ -117,7 +163,7 @@ public class DashboardPage extends JFrame {
         lblSelectSource.setBounds(12, 12, 174, 17);
         container.add(lblSelectSource);
 
-        JComboBox select_src = new JComboBox();
+        select_src = new JComboBox();
         select_src.setModel(new DefaultComboBoxModel(new String[] {"Rekrute.ma", "Emploi.ma"}));
         select_src.setBounds(12, 41, 735, 26);
         container.add(select_src);
@@ -197,7 +243,11 @@ public class DashboardPage extends JFrame {
                 mysql_start.setEnabled(false);
                 action_progress.setValue(0);
                 lbl_logs.setText("Mysql storage: starting...");
-                rekruteScraper.storeAllPosts();
+                if(select_src.getSelectedItem().toString().equals("Rekrute.ma")) {
+                    rekruteScraper.storeAllPosts();
+                } else {
+                    emploiScraper.storeAllPosts();
+                }
                 scraping_mysql.setEnabled(true);
                 mysql_start.setEnabled(true);
                 return null;
@@ -216,10 +266,19 @@ public class DashboardPage extends JFrame {
 
                 lbl_logs.setText("Scraping: starting...");
                 txt_logs.setText(txt_logs.getText() + "Scraping: starting...\n");
-                rekruteScraper.fetchPageNumber();
-                rekruteScraper.fetchPagesUrls();
-                rekruteScraper.fetchAllPostsUrl();
-                rekruteScraper.fetchAllPostsAttributes();
+//                if(select_src.getSelectedItem().toString().equals("Rekrute.ma", "Emploi.ma"))
+                if(select_src.getSelectedItem().toString().equals("Rekrute.ma")) {
+                    rekruteScraper.fetchPageNumber();
+                    rekruteScraper.fetchPagesUrls();
+                    rekruteScraper.fetchAllPostsUrl();
+                    rekruteScraper.fetchAllPostsAttributes();
+                } else {
+                    emploiScraper.fetchPageNumber();
+                    emploiScraper.fetchPagesUrls();
+                    emploiScraper.fetchAllPostsUrl();
+                    emploiScraper.fetchAllPostsAttributes();
+                }
+
                 scraping_mysql.setEnabled(true);
                 mysql_start.setEnabled(true);
                 JOptionPane.showMessageDialog(null, "Finished scraping. Found " + total + " posts.");
